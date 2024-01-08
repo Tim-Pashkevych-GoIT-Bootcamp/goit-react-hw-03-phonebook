@@ -12,6 +12,29 @@ const INITIAL_STATE = {
 export default class App extends Component {
   state = { ...INITIAL_STATE };
 
+  componentDidMount() {
+    try {
+      const contacts = localStorage.getItem('contacts');
+      const parsedContacts = JSON.parse(contacts);
+
+      if (parsedContacts) {
+        this.setState({ contacts: parsedContacts });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    try {
+      if (this.state.contacts !== prevState.contacts) {
+        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   onChange = ({ target }) => {
     this.setState({ filter: target.value });
   };
